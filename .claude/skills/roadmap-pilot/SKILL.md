@@ -7,6 +7,7 @@ description: >
   "continua la roadmap", "next task", "roadmap", or similar.
   Also activates when the user types /roadmap.
 user-invocable: true
+argument-hint: "[--dry-run]"
 disable-model-invocation: true
 ---
 
@@ -23,6 +24,23 @@ Before starting, verify:
 3. Shared types or conventions are defined in `CLAUDE.md`. Read them carefully before touching any code.
 
 If any prerequisite is missing, tell the user what's needed and **stop**.
+
+## Dry-Run Mode
+
+When the user says `/roadmap --dry-run` (or "dry run", "preview", "what's next"):
+
+1. **READ** → Read `CLAUDE.md` completely
+2. **FIND** → Find next unchecked `- [ ]` task in `## Roadmap` section
+3. **PLAN** → Read the target file(s), analyze what needs to change
+4. **REPORT** → Show the user:
+   - The task that would be executed
+   - The file(s) that would be modified
+   - A summary of planned changes (e.g., "12 `any` types to replace, will import from `src/types/`")
+   - Estimated complexity (simple / moderate / complex)
+5. **STOP** → Do NOT execute, do NOT commit, do NOT modify any files
+
+End with:
+> **Dry run complete. Run `/roadmap` to execute this task.**
 
 ## Execution Flow
 

@@ -4,7 +4,7 @@
   "plugins": [
     {
       "name": "roadmap-pilot",
-      "version": "2.0.0",
+      "version": "2.2.0",
       "description": "Two-skill system for incremental codebase cleanup. init-roadmap plans, roadmap-pilot executes. One task per session, zero hallucinations.",
       "path": "."
     }

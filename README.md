@@ -3,7 +3,7 @@
 > Roadmap-driven autopilot for Claude Code. Plan it, then execute it. One task per session, zero hallucinations.
 
 <!-- Badges -->
-![Version](https://img.shields.io/badge/version-2.1.0-blue)
+![Version](https://img.shields.io/badge/version-2.2.0-blue)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-blueviolet)
 ![Tests](https://github.com/antconsales/roadmap-pilot/actions/workflows/test.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -28,6 +28,7 @@ Two skills that split the work:
 |-------|------|------|---------|
 | `init-roadmap` | Architect | Conversational | `/init-roadmap` |
 | `roadmap-pilot` | Builder | Deterministic | `/roadmap` |
+| `roadmap-pilot` | Preview | Read-only | `/roadmap --dry-run` |
 
 ## Quick Start
 
@@ -54,7 +55,15 @@ Claude scans your project, asks targeted questions, generates a phased roadmap i
 
 ![init-roadmap demo](./assets/demo-init.gif)
 
-### 3. Execute (repeat)
+### 3. Preview (optional)
+
+```
+/roadmap --dry-run
+```
+
+Claude reads `CLAUDE.md`, finds the next task, analyzes the target file(s), and shows you exactly what it would do — without touching anything. Useful for reviewing before executing.
+
+### 4. Execute (repeat)
 
 ```
 /roadmap
@@ -64,7 +73,7 @@ Claude reads `CLAUDE.md`, executes ONE task, marks it done, commits, hands off.
 
 ![roadmap demo](./assets/demo.gif)
 
-### 4. Autopilot (optional)
+### 5. Autopilot (optional)
 
 ```bash
 .claude/skills/roadmap-pilot/scripts/auto-roadmap.sh
@@ -293,6 +302,17 @@ roadmap-pilot/
 ├── plugin.json                    # Plugin metadata
 └── README.md
 ```
+
+## Future Roadmap
+
+Ideas under consideration for future versions:
+
+- **Completion report** — Summary of all completed tasks when the roadmap finishes
+- **Session metrics** — Track tasks/session, average time, and blocked tasks
+- **Enterprise mode** — Policy enforcement, audit trail, CLAUDE.md signing
+- **Company standard templates** — Standardized templates for team-wide use
+
+Have an idea? [Open an issue](https://github.com/antconsales/roadmap-pilot/issues).
 
 ## License
 
