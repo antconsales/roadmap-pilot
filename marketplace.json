@@ -1,0 +1,12 @@
+{
+  "name": "roadmap-pilot-marketplace",
+  "description": "Roadmap-driven autopilot for Claude Code. Plan with /init-roadmap, execute with /roadmap.",
+  "plugins": [
+    {
+      "name": "roadmap-pilot",
+      "version": "2.0.0",
+      "description": "Two-skill system for incremental codebase cleanup. init-roadmap plans, roadmap-pilot executes. One task per session, zero hallucinations.",
+      "path": "."
+    }
+  ]
+}

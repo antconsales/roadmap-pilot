@@ -1,8 +1,8 @@
 {
   "name": "roadmap-pilot",
-  "version": "1.0.0",
-  "description": "Roadmap-driven autopilot for incremental codebase cleanup. One task per session, zero hallucinations.",
+  "version": "2.0.0",
+  "description": "Roadmap-driven autopilot for incremental codebase cleanup. Two skills: init-roadmap (plan) + roadmap-pilot (execute). One task per session, zero hallucinations.",
   "author": "antonioconsales",
-  "skills": ["roadmap-pilot"],
-  "tags": ["refactoring", "roadmap", "cleanup", "workflow"]
+  "skills": ["init-roadmap", "roadmap-pilot"],
+  "tags": ["refactoring", "roadmap", "cleanup", "workflow", "planning", "autopilot"]
 }
