@@ -3,8 +3,9 @@
 > Roadmap-driven autopilot for Claude Code. Plan it, then execute it. One task per session, zero hallucinations.
 
 <!-- Badges -->
-![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![Version](https://img.shields.io/badge/version-2.1.0-blue)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-blueviolet)
+![Tests](https://github.com/antconsales/roadmap-pilot/actions/workflows/test.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ## The Problem
@@ -123,6 +124,9 @@ Don't want to start from scratch? Use a template as your `CLAUDE.md`:
 | `templates/react-migration.md` | Modernize React (class → hooks, HOCs → hooks) |
 | `templates/python-typing.md` | Add type hints to Python |
 | `templates/general-refactoring.md` | Generic cleanup and restructuring |
+| `templates/monorepo.md` | Monorepo with multiple packages |
+| `templates/large-refactor.md` | Major restructuring (move, split, extract) |
+| `templates/bug-fixing-batch.md` | Systematic batch bug fixing by priority |
 
 ```bash
 cp templates/typescript-typing.md /your-project/CLAUDE.md
@@ -188,6 +192,74 @@ Not just TypeScript typing. Works with:
 
 **Principle: plan once, execute incrementally, one task per session.**
 
+## Real-World Example: Step by Step
+
+Here's exactly what happens when you use roadmap-pilot on a React Native project:
+
+**Step 1: Plan** — You run `/init-roadmap` in your project.
+
+Claude scans it and asks:
+> Found 147 .ts files, 89 contain `any`. Goal? → "Remove all `any` types"
+> Branch? → Creating `refactor/typing`
+> Where should shared types live? → `src/types/index.ts`
+
+It generates a `CLAUDE.md` with 23 tasks across 5 phases.
+
+**Step 2: Execute** — You open a new session and run `/roadmap`.
+
+Claude reads `CLAUDE.md`, finds:
+```
+- [ ] Type `src/utils/helpers.ts`
+```
+It reads the file, replaces 12 `any` types, imports shared types, marks the task `[x]`, commits:
+```
+[typing] type src/utils/helpers.ts
+```
+And says: *"Done. Open a new session and say: continue the roadmap"*
+
+**Step 3: Repeat** — You open a new session, run `/roadmap` again. Next task. Same flow.
+
+**Step 4: Autopilot** — Tired of opening sessions manually? Run:
+```bash
+./auto-roadmap.sh CLAUDE.md
+```
+It launches 23 Claude sessions back-to-back, each doing one task. Go grab a coffee.
+
+After 23 sessions: `ROADMAP COMPLETED! 23/23 tasks done.`
+
+## Writing Good Tasks
+
+The quality of your roadmap determines how well Claude executes. Follow these rules:
+
+| Rule | Good | Bad |
+|------|------|-----|
+| Be specific | `Type src/utils/helpers.ts` | `Type utility files` |
+| One file per task | `Type src/api/users.ts` | `Type all API files` |
+| Include context | `Extract shared types to src/types/api.ts` | `Extract types` |
+| State the goal | `Replace any with proper types in formatters.ts` | `Fix formatters` |
+| Keep it atomic | `Rename getData → fetchUserProfile in users.ts` | `Rename all functions` |
+
+**Tasks to avoid:**
+- `Refactor the auth system` — too vague, split into specific sub-tasks
+- `Fix all bugs` — each bug should be its own task
+- `Update tests` — specify which tests and what changes
+- `Clean up code` — what exactly needs cleaning?
+
+**The golden rule:** Could a developer with no context read this task and know exactly what to do? If yes, Claude can too.
+
+## Testing
+
+Run the regression test suite:
+
+```bash
+./tests/test-scripts.sh
+```
+
+Tests cover:
+- `next-task.sh`: finds correct task, ignores non-roadmap checkboxes, handles edge cases
+- `status.sh`: shows correct progress per phase, ignores QA sections
+- `scan-project.sh`: detects frameworks, git status, existing CLAUDE.md
+
 ## Project Structure
 
 ```
@@ -206,11 +278,17 @@ roadmap-pilot/
 │               ├── next-task.sh
 │               ├── rollback.sh
 │               └── status.sh
+├── .github/workflows/test.yml     # CI/CD: tests, lint, validation
+├── tests/
+│   └── test-scripts.sh            # 30 regression tests
 ├── templates/                     # Ready-to-use CLAUDE.md templates
 │   ├── typescript-typing.md
 │   ├── react-migration.md
 │   ├── python-typing.md
-│   └── general-refactoring.md
+│   ├── general-refactoring.md
+│   ├── monorepo.md
+│   ├── large-refactor.md
+│   └── bug-fixing-batch.md
 ├── marketplace.json               # Plugin marketplace manifest
 ├── plugin.json                    # Plugin metadata
 └── README.md

@@ -1,0 +1,110 @@
+name: Tests
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  test-scripts:
+    name: Test Scripts
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: |
+          chmod +x .claude/skills/roadmap-pilot/scripts/*.sh
+          chmod +x .claude/skills/init-roadmap/scripts/*.sh
+          chmod +x tests/test-scripts.sh
+
+      - name: Run test suite
+        run: ./tests/test-scripts.sh
+
+  lint-markdown:
+    name: Lint Markdown
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check SKILL.md files exist
+        run: |
+          test -f .claude/skills/roadmap-pilot/SKILL.md || (echo "Missing roadmap-pilot SKILL.md" && exit 1)
+          test -f .claude/skills/init-roadmap/SKILL.md || (echo "Missing init-roadmap SKILL.md" && exit 1)
+
+      - name: Check SKILL.md frontmatter
+        run: |
+          for skill_file in .claude/skills/*/SKILL.md; do
+            if ! head -1 "$skill_file" | grep -q '^---'; then
+              echo "ERROR: $skill_file missing YAML frontmatter"
+              exit 1
+            fi
+            echo "OK: $skill_file has frontmatter"
+          done
+
+      - name: Check scripts are executable
+        run: |
+          for script in .claude/skills/*/scripts/*.sh; do
+            if [ ! -x "$script" ]; then
+              echo "ERROR: $script is not executable"
+              exit 1
+            fi
+            echo "OK: $script is executable"
+          done
+
+      - name: Check templates have Roadmap section
+        run: |
+          for template in templates/*.md; do
+            if ! grep -q '^## Roadmap' "$template"; then
+              echo "ERROR: $template missing '## Roadmap' section"
+              exit 1
+            fi
+            echo "OK: $template has Roadmap section"
+          done
+
+  validate-plugin:
+    name: Validate Plugin
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate plugin.json
+        run: |
+          python3 -c "
+          import json, sys
+          with open('plugin.json') as f:
+            data = json.load(f)
+          required = ['name', 'version', 'description', 'skills']
+          for key in required:
+            if key not in data:
+              print(f'ERROR: Missing key \"{key}\" in plugin.json')
+              sys.exit(1)
+          print(f'OK: plugin.json valid — {data[\"name\"]} v{data[\"version\"]}')
+          "
+
+      - name: Validate marketplace.json
+        run: |
+          python3 -c "
+          import json, sys
+          with open('marketplace.json') as f:
+            data = json.load(f)
+          if 'plugins' not in data:
+            print('ERROR: Missing \"plugins\" key in marketplace.json')
+            sys.exit(1)
+          for plugin in data['plugins']:
+            for key in ['name', 'version', 'path']:
+              if key not in plugin:
+                print(f'ERROR: Plugin missing key \"{key}\"')
+                sys.exit(1)
+          print(f'OK: marketplace.json valid — {len(data[\"plugins\"])} plugin(s)')
+          "

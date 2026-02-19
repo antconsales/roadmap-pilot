@@ -14,12 +14,12 @@ fi
 
 # Extract only the ## Roadmap section
 # From "## Roadmap" until the next "## " heading (or end of file)
-ROADMAP_SECTION=$(sed -n '/^## Roadmap/,/^## [^#]/p' "$CLAUDE_MD" | sed '$d')
-
-# If no Roadmap section found, try without stripping last line (section goes to EOF)
-if [ -z "$ROADMAP_SECTION" ]; then
-  ROADMAP_SECTION=$(sed -n '/^## Roadmap/,$p' "$CLAUDE_MD")
-fi
+# Uses awk for reliable section extraction
+ROADMAP_SECTION=$(awk '
+  /^## Roadmap/ { found=1; next }
+  found && /^## [^#]/ { exit }
+  found { print }
+' "$CLAUDE_MD")
 
 if [ -z "$ROADMAP_SECTION" ]; then
   echo "ERROR: No '## Roadmap' section found in $CLAUDE_MD"

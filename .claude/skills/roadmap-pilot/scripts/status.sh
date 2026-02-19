@@ -47,11 +47,12 @@ draw_bar() {
   echo -n "$bar"
 }
 
-# Extract only the ## Roadmap section
-ROADMAP_SECTION=$(sed -n '/^## Roadmap/,/^## [^#]/p' "$CLAUDE_MD" | sed '$d')
-if [ -z "$ROADMAP_SECTION" ]; then
-  ROADMAP_SECTION=$(sed -n '/^## Roadmap/,$p' "$CLAUDE_MD")
-fi
+# Extract only the ## Roadmap section (awk for reliable extraction)
+ROADMAP_SECTION=$(awk '
+  /^## Roadmap/ { found=1; next }
+  found && /^## [^#]/ { exit }
+  found { print }
+' "$CLAUDE_MD")
 
 if [ -z "$ROADMAP_SECTION" ]; then
   echo "ERROR: No '## Roadmap' section found in $CLAUDE_MD"
