@@ -28,7 +28,8 @@ If any prerequisite is missing, tell the user what's needed and **stop**.
 
 ```
 1. READ    → Read CLAUDE.md completely
-2. FIND    → Find first unchecked `- [ ]` task in the Roadmap section
+2. FIND    → Find first unchecked `- [ ]` task in the `## Roadmap` section ONLY
+             (ignore checkboxes in other sections like Test Flows, QA, etc.)
 3. PLAN    → Read the target file(s), understand what needs to change
 4. EXECUTE → Make the changes (type a file, create a file, extract, refactor)
 5. VERIFY  → Ensure no logic changed (diff review)

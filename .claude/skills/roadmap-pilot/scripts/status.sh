@@ -1,6 +1,8 @@
 #!/bin/bash
-# status.sh - Visual progress dashboard for roadmap
+# status.sh - Visual progress dashboard for roadmap section ONLY
 # Usage: ./status.sh [path-to-claude-md]
+#
+# Only parses the ## Roadmap section, ignoring Test Flows, QA, etc.
 
 CLAUDE_MD="${1:-CLAUDE.md}"
 
@@ -45,18 +47,28 @@ draw_bar() {
   echo -n "$bar"
 }
 
+# Extract only the ## Roadmap section
+ROADMAP_SECTION=$(sed -n '/^## Roadmap/,/^## [^#]/p' "$CLAUDE_MD" | sed '$d')
+if [ -z "$ROADMAP_SECTION" ]; then
+  ROADMAP_SECTION=$(sed -n '/^## Roadmap/,$p' "$CLAUDE_MD")
+fi
+
+if [ -z "$ROADMAP_SECTION" ]; then
+  echo "ERROR: No '## Roadmap' section found in $CLAUDE_MD"
+  exit 1
+fi
+
 echo ""
 echo -e "${BOLD}  ROADMAP PROGRESS${NC}"
 echo -e "  ─────────────────────────────────────────────"
 echo ""
 
-# Parse phases
+# Parse phases within roadmap section only
 CURRENT_PHASE=""
 PHASE_DONE=0
 PHASE_TOTAL=0
 TOTAL_DONE=0
 TOTAL_ALL=0
-FIRST_PHASE=true
 
 print_phase() {
   if [ -n "$CURRENT_PHASE" ]; then
@@ -82,7 +94,6 @@ while IFS= read -r line; do
     CURRENT_PHASE=$(echo "$line" | sed 's/^###\s*//')
     PHASE_DONE=0
     PHASE_TOTAL=0
-    FIRST_PHASE=false
   fi
 
   # Count checked tasks
@@ -98,7 +109,7 @@ while IFS= read -r line; do
     PHASE_TOTAL=$((PHASE_TOTAL + 1))
     TOTAL_ALL=$((TOTAL_ALL + 1))
   fi
-done < "$CLAUDE_MD"
+done <<< "$ROADMAP_SECTION"
 
 # Print last phase
 print_phase
@@ -120,8 +131,8 @@ fi
 
 printf "\n  ${BOLD}${TOTAL_COLOR}%-28s %s %d/%d (%d%%)${NC}\n" "TOTAL" "$TOTAL_BAR" "$TOTAL_DONE" "$TOTAL_ALL" "$TOTAL_PCT"
 
-# Show next task
-NEXT=$(grep '^\- \[ \]' "$CLAUDE_MD" | head -1 | sed 's/^- \[ \] //')
+# Show next task (from roadmap section only)
+NEXT=$(echo "$ROADMAP_SECTION" | grep '^\- \[ \]' | head -1 | sed 's/^- \[ \] //')
 if [ -n "$NEXT" ]; then
   echo ""
   echo -e "  ${BLUE}Next:${NC} $NEXT"
