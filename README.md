@@ -7,8 +7,6 @@
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-blueviolet)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-![Demo](./assets/demo.gif)
-
 ## The Problem
 
 Claude Code is powerful but forgets everything between sessions. Large refactoring tasks cause context overflow and hallucinations. Manual tracking in CLAUDE.md works but is tedious.
@@ -53,6 +51,8 @@ cp -r .claude/ /your-project/.claude/
 
 Claude scans your project, asks targeted questions, generates a phased roadmap in `CLAUDE.md`.
 
+![init-roadmap demo](./assets/demo-init.gif)
+
 ### 3. Execute (repeat)
 
 ```
@@ -61,6 +61,8 @@ Claude scans your project, asks targeted questions, generates a phased roadmap i
 
 Claude reads `CLAUDE.md`, executes ONE task, marks it done, commits, hands off.
 
+![roadmap demo](./assets/demo.gif)
+
 ### 4. Autopilot (optional)
 
 ```bash
@@ -68,6 +70,8 @@ Claude reads `CLAUDE.md`, executes ONE task, marks it done, commits, hands off.
 ```
 
 Runs `claude -p` in a loop. Each call = fresh session. Stops when done or stuck.
+
+![autopilot demo](./assets/demo-autopilot.gif)
 
 ## Scripts
 
