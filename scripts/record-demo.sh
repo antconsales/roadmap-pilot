@@ -136,8 +136,8 @@ echo -e "  \033[0;32m✓  Committed: [typing] type src/utils/helpers.ts\033[0m"
 sleep 0.5
 echo ""
 echo -e "  \033[1;32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "  \033[1;32mFatto. Apri nuova conversazione e dimmi:\033[0m"
-echo -e "  \033[1;32mcontinua la roadmap\033[0m"
+echo -e "  \033[1;32mDone. Open a new session and say:\033[0m"
+echo -e "  \033[1;32mcontinue the roadmap\033[0m"
 echo -e "  \033[1;32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo ""
 sleep 2
