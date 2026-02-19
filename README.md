@@ -7,9 +7,7 @@
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-blueviolet)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-<!-- DEMO GIF: Replace this with an actual recording -->
-<!-- ![Demo](./assets/demo.gif) -->
-<!-- To record: use `asciinema rec` or `terminalizer`, show /init-roadmap → /roadmap flow -->
+![Demo](./assets/demo.gif)
 
 ## The Problem
 
